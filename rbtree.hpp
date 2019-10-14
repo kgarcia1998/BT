@@ -108,71 +108,51 @@ void RBTree<T>::fixup(RBNode<T> *z)
 template <typename T>
 void RBTree<T>::left(RBNode<T> *x)
 {
-    RBNode<T> *y = nullptr;
-    if (x->right->left)
+    RBNode<T> *y = x->right;
+    x->right = y->left;
+    if (y->left != nullptr)
     {
-        y->right = x->right->left;
+        y->left->parent = x;
     }
-    y->left = x->left;
-    y->data = x->data;
-    y->color = x->color;
-    x->data = x->right->data;
-    x->left = y;
-    if (y->left)
+    y->parent = x->parent;
+    if (x->parent == nullptr)
     {
-        y->left->parent = y;
+        root = y;
     }
-    if (y->right)
+    else if (x == x->parent->left)
     {
-        y->right->parent = y;
-    }
-    y->parent = x;
-    if (x->right->right)
-    {
-        x->right = x->right->right;
+        x->parent->left = y;
     }
     else
     {
-        x->right = nullptr;
-    }
-    if (x->right)
-    {
-        x->right->parent = x;
+        x->parent->right = y;
+        y->left = x;
+        x->parent = y;
     }
 }
 template <typename T>
 void RBTree<T>::right(RBNode<T> *x)
 {
-    RBNode<T> *y = nullptr;
-    if (x->left->right)
+    RBNode<T> *y = x->left;
+    x->left = y->right;
+    if (y->right != nullptr)
     {
-        y->left = x->left->right;
+        y->right->parent = x;
     }
-    y->right = x->right;
-    y->data = x->data;
-    y->color = x->color;
-    x->data = x->left->data;
-    x->right = y;
-    if (y->right)
+    y->parent = x->parent;
+    if (x->parent == nullptr)
     {
-        y->right->parent = y;
+        root = y;
     }
-    if (y->left)
+    else if (x == x->parent->right)
     {
-        y->left->parent = y;
-    }
-    y->parent = x;
-    if (x->left->left)
-    {
-        x->left = x->left->left;
+        x->parent->right = y;
     }
     else
     {
-        x->left = nullptr;
-    }
-    if (x->left)
-    {
-        x->left->parent = x;
+        x->parent->left = y;
+        y->right = x;
+        x->parent = y;
     }
 }
 
