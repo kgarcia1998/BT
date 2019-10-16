@@ -62,45 +62,57 @@ template <typename T>
 void RBTree<T>::fixup(RBNode<T> *z)
 {
 
-    while (z->parent->color == Color::RED)
+    while (z != root && z->parent->color == Color::RED)
     {
         if (z->parent == z->parent->parent->left)
         {
             RBNode<T> *y = z->parent->parent->right;
-            if (y->color == Color::RED)
+            if (y == nullptr)
             {
+                if (z == z->parent->right)
+                {
+                    z = z->parent;
+                    left(z);
+                }
                 z->parent->color = Color::BLACK;
-                y->color = Color::BLACK;
                 z->parent->parent->color = Color::RED;
-                z = z->parent->parent;
+                right(z->parent->parent);
             }
-            else if (z == z->parent->right)
+            else
             {
-                z = z->parent;
-                left(z);
+                if (y->color == Color::RED)
+                {
+                    z->parent->color = Color::BLACK;
+                    y->color = Color::BLACK;
+                    z->parent->parent->color = Color::RED;
+                    z = z->parent->parent;
+                }
             }
-            z->parent->color = Color::BLACK;
-            z->parent->parent->color = Color::RED;
-            right(z->parent->parent);
         }
         else
         {
             RBNode<T> *y = z->parent->parent->left;
-            if (y->color == Color::RED)
+            if (y == nullptr)
             {
+                if (z == z->parent->left)
+                {
+                    z = z->parent;
+                    right(z);
+                }
                 z->parent->color = Color::BLACK;
-                y->color = Color::BLACK;
                 z->parent->parent->color = Color::RED;
-                z = z->parent->parent;
+                left(z->parent->parent);
             }
-            else if (z == z->parent->left)
+            else
             {
-                z = z->parent;
-                right(z);
+                if (y->color == Color::RED)
+                {
+                    z->parent->color = Color::BLACK;
+                    y->color = Color::BLACK;
+                    z->parent->parent->color = Color::RED;
+                    z = z->parent->parent;
+                }
             }
-            z->parent->color = Color::BLACK;
-            z->parent->parent->color = Color::RED;
-            left(z->parent->parent);
         }
     }
     root->color = Color::BLACK;
@@ -126,9 +138,9 @@ void RBTree<T>::left(RBNode<T> *x)
     else
     {
         x->parent->right = y;
-        y->left = x;
-        x->parent = y;
     }
+    y->left = x;
+    x->parent = y;
 }
 template <typename T>
 void RBTree<T>::right(RBNode<T> *x)
@@ -151,9 +163,9 @@ void RBTree<T>::right(RBNode<T> *x)
     else
     {
         x->parent->left = y;
-        y->right = x;
-        x->parent = y;
     }
+    y->right = x;
+    x->parent = y;
 }
 
 #endif
